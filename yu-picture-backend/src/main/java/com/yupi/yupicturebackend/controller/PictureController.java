@@ -7,7 +7,6 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.github.benmanes.caffeine.cache.Cache;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.yupi.yupicturebackend.annotation.AuthCheck;
-import com.yupi.yupicturebackend.api.aliyunai.AliYunAiApi;
 import com.yupi.yupicturebackend.api.aliyunai.model.CreateOutPaintingTaskResponse;
 import com.yupi.yupicturebackend.api.aliyunai.model.GetOutPaintingTaskResponse;
 import com.yupi.yupicturebackend.api.imagesearch.ImageSearchApiFacade;
@@ -70,8 +69,8 @@ public class PictureController {
     @Resource
     private StringRedisTemplate stringRedisTemplate;
 
-    @Resource
-    private AliYunAiApi aliYunAiApi;
+//    @Resource
+//    private AliYunAiApi aliYunAiApi;
 
     @Resource
     private SpaceUserAuthManager spaceUserAuthManager;
@@ -413,10 +412,10 @@ public class PictureController {
     /**
      * 查询 AI 扩图任务
      */
-    @GetMapping("/out_painting/get_task")
-    public BaseResponse<GetOutPaintingTaskResponse> getPictureOutPaintingTask(String taskId) {
-        ThrowUtils.throwIf(StrUtil.isBlank(taskId), ErrorCode.PARAMS_ERROR);
-        GetOutPaintingTaskResponse task = aliYunAiApi.getOutPaintingTask(taskId);
-        return ResultUtils.success(task);
-    }
+//    @GetMapping("/out_painting/get_task")
+//    public BaseResponse<GetOutPaintingTaskResponse> getPictureOutPaintingTask(String taskId) {
+//        ThrowUtils.throwIf(StrUtil.isBlank(taskId), ErrorCode.PARAMS_ERROR);
+//        GetOutPaintingTaskResponse task = aliYunAiApi.getOutPaintingTask(taskId);
+//        return ResultUtils.success(task);
+//    }
 }

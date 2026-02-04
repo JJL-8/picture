@@ -8,7 +8,6 @@ import cn.hutool.json.JSONUtil;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
-import com.yupi.yupicturebackend.api.aliyunai.AliYunAiApi;
 import com.yupi.yupicturebackend.api.aliyunai.model.CreateOutPaintingTaskRequest;
 import com.yupi.yupicturebackend.api.aliyunai.model.CreateOutPaintingTaskResponse;
 import com.yupi.yupicturebackend.exception.BusinessException;
@@ -84,8 +83,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
     @Resource
     private TransactionTemplate transactionTemplate;
 
-    @Resource
-    private AliYunAiApi aliYunAiApi;
+//    @Resource
+//    private AliYunAiApi aliYunAiApi;
 
     @Override
     public void validPicture(Picture picture) {
@@ -632,7 +631,8 @@ public class PictureServiceImpl extends ServiceImpl<PictureMapper, Picture>
         createOutPaintingTaskRequest.setInput(input);
         createOutPaintingTaskRequest.setParameters(createPictureOutPaintingTaskRequest.getParameters());
         // 创建任务
-        return aliYunAiApi.createOutPaintingTask(createOutPaintingTaskRequest);
+//        return aliYunAiApi.createOutPaintingTask(createOutPaintingTaskRequest);
+        return null;
     }
 
     /**
