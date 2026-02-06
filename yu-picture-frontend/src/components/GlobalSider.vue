@@ -55,11 +55,15 @@ const menuItems = computed(() => {
   // 展示团队空间分组
   const teamSpaceSubMenus = teamSpaceList.value.map((spaceUser) => {
     const space = spaceUser.space
+    // 过滤掉space为空的记录（空间已被删除）
+    if (!space) {
+      return null
+    }
     return {
       key: '/space/' + spaceUser.spaceId,
-      label: space?.spaceName,
+      label: space.spaceName,
     }
-  })
+  }).filter(Boolean)
   const teamSpaceMenuGroup = {
     type: 'group',
     label: '我的团队',

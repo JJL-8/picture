@@ -140,6 +140,12 @@ public class SpaceUserController {
         List<SpaceUser> spaceUserList = spaceUserService.list(
                 spaceUserService.getQueryWrapper(spaceUserQueryRequest)
         );
-        return ResultUtils.success(spaceUserService.getSpaceUserVOList(spaceUserList));
+        List<SpaceUserVO> spaceUserVOList = spaceUserService.getSpaceUserVOList(spaceUserList);
+        // 过滤掉空间为null的记录（空间已被删除）和不是团队类型的空间
+        List<SpaceUserVO> filteredList = spaceUserVOList.stream()
+                .filter(vo -> vo.getSpace() != null)
+                .filter(vo -> vo.getSpace().getSpaceType() == 1)
+                .collect(java.util.stream.Collectors.toList());
+        return ResultUtils.success(filteredList);
     }
 }
