@@ -55,6 +55,10 @@ public class SpaceUserServiceImpl extends ServiceImpl<SpaceUserMapper, SpaceUser
         ThrowUtils.throwIf(spaceUserAddRequest == null, ErrorCode.PARAMS_ERROR);
         SpaceUser spaceUser = new SpaceUser();
         BeanUtils.copyProperties(spaceUserAddRequest, spaceUser);
+        // 如果未指定空间角色，默认设置为 viewer
+        if (spaceUser.getSpaceRole() == null) {
+            spaceUser.setSpaceRole(SpaceRoleEnum.VIEWER.getValue());
+        }
         validSpaceUser(spaceUser, true);
         // 校验是否已是空间成员
         long count = this.lambdaQuery()
