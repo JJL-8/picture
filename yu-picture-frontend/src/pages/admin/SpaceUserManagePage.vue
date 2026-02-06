@@ -118,12 +118,13 @@ const formData = reactive<API.SpaceUserAddRequest>({})
 // 创建成员
 const handleSubmit = async () => {
   const spaceId = props.id
-  if (!spaceId) {
+  if (!spaceId || !formData.userId) {
+    message.warning('请输入用户 id')
     return
   }
   const res = await addSpaceUserUsingPost({
-    spaceId,
-    ...formData,
+    spaceId: Number(spaceId),
+    userId: Number(formData.userId),
   })
   if (res.data.code === 0) {
     message.success('添加成功')

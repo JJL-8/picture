@@ -56,6 +56,12 @@ public class SpaceUserServiceImpl extends ServiceImpl<SpaceUserMapper, SpaceUser
         SpaceUser spaceUser = new SpaceUser();
         BeanUtils.copyProperties(spaceUserAddRequest, spaceUser);
         validSpaceUser(spaceUser, true);
+        // 校验是否已是空间成员
+        long count = this.lambdaQuery()
+                .eq(SpaceUser::getSpaceId, spaceUser.getSpaceId())
+                .eq(SpaceUser::getUserId, spaceUser.getUserId())
+                .count();
+        ThrowUtils.throwIf(count > 0, ErrorCode.PARAMS_ERROR, "该用户已是空间成员，请勿重复添加");
         // 数据库操作
         boolean result = this.save(spaceUser);
         ThrowUtils.throwIf(!result, ErrorCode.OPERATION_ERROR);
