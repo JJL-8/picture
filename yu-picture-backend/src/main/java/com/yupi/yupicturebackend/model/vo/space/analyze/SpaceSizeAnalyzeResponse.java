@@ -14,6 +14,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 public class SpaceSizeAnalyzeResponse implements Serializable {
 
+    private static final long serialVersionUID = -2442952655353285623L;
     /**
      * 图片大小范围
      */
@@ -24,5 +25,5 @@ public class SpaceSizeAnalyzeResponse implements Serializable {
      */
     private Long count;
 
-    private static final long serialVersionUID = 1L;
+   
 }

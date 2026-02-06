@@ -13,6 +13,7 @@ import java.util.List;
 @Data
 public class PictureVO implements Serializable {
 
+    private static final long serialVersionUID = -5756805007420400977L;
     /**
      * id
      */
@@ -113,7 +114,7 @@ public class PictureVO implements Serializable {
      */
     private List<String> permissionList = new ArrayList<>();
 
-    private static final long serialVersionUID = 1L;
+   
 
     /**
      * 封装类转对象

@@ -11,6 +11,7 @@ import java.util.List;
 @Data
 public class PictureEditByBatchRequest implements Serializable {
 
+    private static final long serialVersionUID = -3523279002700153424L;
     /**
      * 图片 id 列表
      */
@@ -36,5 +37,5 @@ public class PictureEditByBatchRequest implements Serializable {
      */
     private String nameRule;
 
-    private static final long serialVersionUID = 1L;
+ 
 }

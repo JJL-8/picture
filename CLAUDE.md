@@ -110,6 +110,7 @@ Pages: HomePage, picture CRUD, space management, space analysis (ECharts), admin
 |------|-------|
 | Deploy Path | `/root/yu-picture/backend` |
 | JAR Name | `yu-picture-backend-0.0.1-SNAPSHOT.jar` |
+| Service Name | `yu-picture-backend.service` |
 | Port | 8123 |
 | Profile | prod |
 | JVM Args | `-Xms512m -Xmx1024m` |
@@ -123,29 +124,32 @@ mvn clean package -DskipTests
 # 2. Upload to server
 scp yu-picture-backend/target/yu-picture-backend-0.0.1-SNAPSHOT.jar root@<SERVER_IP>:/root/yu-picture/backend/
 
-# 3. SSH to server and restart
+# 3. SSH to server and restart (using systemd)
 ssh root@<SERVER_IP>
-cd /root/yu-picture/backend
 
-# Check existing process
-ps -ef | grep yu-picture
+# Restart service (recommended - systemd managed)
+systemctl restart yu-picture-backend
 
-# Stop old process (replace <PID> with actual process ID)
-kill <PID>
+# Or check status
+systemctl status yu-picture-backend
 
-# Start new service
-nohup java -jar -Xms512m -Xmx1024m -Dspring.profiles.active=prod yu-picture-backend-0.0.1-SNAPSHOT.jar > app.log 2>&1 &
+# View logs
+journalctl -u yu-picture-backend -f
 
-# Verify startup
-tail -f app.log
+# If you need to manually start/stop:
+# systemctl start yu-picture-backend
+# systemctl stop yu-picture-backend
 ```
+
+> **Note**: The backend is managed by systemd service `yu-picture-backend.service`. Always use `systemctl` to manage the service instead of manually killing processes.
 
 ### Troubleshooting
 
 | Issue | Cause | Solution |
 |-------|-------|----------|
-| Multiple Java processes running | Previous `kill` failed, started multiple times | Use `kill -9 <PID>` to force kill all, then start one |
-| CPU 100% after deploy | Multiple processes competing for resources | `ps -ef \| grep yu-picture` to check, kill duplicates |
+| Process auto-restarts after kill | Systemd managed service | Use `systemctl stop yu-picture-backend` or `systemctl restart yu-picture-backend` |
+| Multiple Java processes running | Previous `kill` failed, started multiple times | Use `systemctl restart yu-picture-backend` instead of manual kill |
+| CPU 100% after deploy | Multiple processes competing for resources | `systemctl status yu-picture-backend` to check, restart with systemctl |
 | SSH connection lost | Shell stuck from foreground process | Open new SSH connection, kill stuck process |
 | Service won't start | Port occupied (8123) | `netstat -tunlp \| grep 8123` to find process |
 | High CPU during startup | Normal JVM warmup | Wait 30-60 seconds, CPU should drop |

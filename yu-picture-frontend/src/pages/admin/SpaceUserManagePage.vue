@@ -123,9 +123,9 @@ const handleSubmit = async () => {
     return
   }
   const res = await addSpaceUserUsingPost({
-    spaceId: Number(spaceId),
-    userId: Number(formData.userId),
-  })
+    spaceId: spaceId as any,  // 直接传递字符串，避免 Number() 转换导致的精度丢失
+    userId: formData.userId as any,
+  } as any)
   if (res.data.code === 0) {
     message.success('添加成功')
     // 刷新数据

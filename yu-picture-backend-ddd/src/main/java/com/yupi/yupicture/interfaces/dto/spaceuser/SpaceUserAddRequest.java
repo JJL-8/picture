@@ -10,6 +10,7 @@ import java.io.Serializable;
 @Data
 public class SpaceUserAddRequest implements Serializable {
 
+    private static final long serialVersionUID = -6229761945026810172L;
     /**
      * 空间 ID
      */
@@ -25,5 +26,5 @@ public class SpaceUserAddRequest implements Serializable {
      */
     private String spaceRole;
 
-    private static final long serialVersionUID = 1L;
+   
 }
