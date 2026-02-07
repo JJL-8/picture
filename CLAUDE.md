@@ -11,6 +11,10 @@ The repo contains three modules:
 - **yu-picture-backend** — Spring Boot 2.7.6 backend (Java 8, standard layered architecture)
 - **yu-picture-backend-ddd** — Alternative backend using DDD (Domain-Driven Design) architecture
 
+## Communication Preferences
+- Always respond in Chinese (中文) unless explicitly asked for English.
+- When the user reports an error, explain the root cause FIRST before proposing or making any code changes. Ask before editing.
+
 ## Build & Run Commands
 
 ### Frontend (`yu-picture-frontend/`)
@@ -82,7 +86,7 @@ Package: `com.yupi.yupicture`
 
 - **Vue 3** (Composition API) + **Pinia** state management + **Vue Router**
 - **Ant Design Vue 4** component library
-- **Axios** HTTP client with interceptors in `request.ts` — base URL is `/api`, auto-redirects to login on 401 (code 40100)
+- **Axios** HTTP client with interceptors in `request.ts` — `baseURL` is empty string (relies on Vite proxy or same-origin deployment). Backend context path is `/api`. Auto-redirects to login on 401 (code 40100).
 - **OpenAPI code generation** — API client types and functions auto-generated into `src/api/` from backend Swagger via `@umijs/openapi` (`openapi.config.js`)
 - **Route-level access control** in `access.ts` — admin routes (`/admin/*`) require `userRole === 'admin'`
 - **State** — Single Pinia store `useLoginUserStore` manages auth state
@@ -101,6 +105,13 @@ Pages: HomePage, picture CRUD, space management, space analysis (ECharts), admin
 - **API Response Format**: Wrapped in `BaseResponse<T>` with `code`, `data`, `message` fields. Use `ResultUtils` to construct responses.
 - **Error Handling**: `BusinessException` with `ErrorCode` enum, handled globally by `GlobalExceptionHandler`.
 - **HTTP Test Files**: IntelliJ HTTP client test files in `yu-picture-backend/httpTest/`.
+
+## Gotchas & Dev Notes
+
+- **Backend config not in git**: `application.yml` is not checked into the repo. Developers must create `yu-picture-backend/src/main/resources/application.yml` manually (see `target/classes/application.yml` for reference structure, but DO NOT commit secrets).
+- **Frontend proxy disabled**: The Vite proxy in `vite.config.ts` is commented out. For local dev, either uncomment it or deploy frontend behind a reverse proxy that forwards `/api` to `localhost:8123`.
+- **Sensitive keys**: COS secretKey and DB password are in `application.yml`. Never commit this file to git.
+- **MyBatis camelCase disabled**: `map-underscore-to-camel-case: false` — DB column names must exactly match entity field names.
 
 ## Deployment
 
@@ -145,14 +156,11 @@ journalctl -u yu-picture-backend -f
 
 ### Troubleshooting
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| Process auto-restarts after kill | Systemd managed service | Use `systemctl stop yu-picture-backend` or `systemctl restart yu-picture-backend` |
-| Multiple Java processes running | Previous `kill` failed, started multiple times | Use `systemctl restart yu-picture-backend` instead of manual kill |
-| CPU 100% after deploy | Multiple processes competing for resources | `systemctl status yu-picture-backend` to check, restart with systemctl |
-| SSH connection lost | Shell stuck from foreground process | Open new SSH connection, kill stuck process |
-| Service won't start | Port occupied (8123) | `netstat -tunlp \| grep 8123` to find process |
-| High CPU during startup | Normal JVM warmup | Wait 30-60 seconds, CPU should drop |
+| Issue | Solution |
+|-------|----------|
+| Process won't stop / auto-restarts / multiple Java processes | Always use `systemctl restart yu-picture-backend`. Never use manual `kill`. |
+| Service won't start (port 8123 occupied) | `netstat -tunlp \| grep 8123` to find and kill the occupying process. |
+| High CPU during startup | Normal JVM warmup — wait 30-60s. If >2 min, likely a code issue, rollback. |
 
 ### Important Notes
 

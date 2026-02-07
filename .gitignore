@@ -146,3 +146,4 @@ fabric.properties
 .idea/caches/build_file_checksums.ser
 
 docker-compose.yml
+.claude.local.md
